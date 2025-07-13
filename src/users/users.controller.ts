@@ -1,0 +1,63 @@
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Patch, Post, SetMetadata } from '@nestjs/common';
+import { UsersService } from './users.service';
+import { CreateUserDTO } from './dtos/create-user-dto';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { UpdateUserDTO } from './dtos/update-user-dto';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { UserRole } from './enums/user-roles-enum';
+
+@Controller('users')
+export class UsersController {
+    constructor(private readonly usersService: UsersService) {}
+
+    @Post()
+    @Roles([UserRole.ADMIN])
+    async createUser(
+        @Body() createUserDto: CreateUserDTO) {
+        return this.usersService.createUser(createUserDto);
+    }
+
+    @Get()
+    @SetMetadata('message', 'Fetching all users')
+    async getUsers(){
+        return await this.usersService.findAllUsers();
+    }
+
+    @Get(':id')
+    async getOneUser(@Param(
+        'id',
+        new ParseIntPipe({
+            errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE
+        })
+    ) id: number){
+        return await this.usersService.findUserById(id)
+    }
+
+    @Delete(':id')
+    async deleteOneUser(
+        @Param('id',
+            new ParseIntPipe({
+                errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE
+            })
+        ) id: number
+    ){
+        return await this.usersService.deleteUser(id);
+    }
+
+    @Patch(':id')
+    async updateUser(
+        @Param('id',
+            new ParseIntPipe({
+                errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE
+            })
+        ) id: number,
+        @Body() userData: UpdateUserDTO
+    ){
+        return await this.usersService.updateUser(id, userData);
+    }
+
+    @Get('/get/profile')
+    async getProfile(@CurrentUser() user: any) {
+        return this.usersService.findUserById(user.id);
+    }
+}
