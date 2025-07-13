@@ -33,7 +33,7 @@ export class AuthGuard implements CanActivate{
             }
 
             const user = await this.userService.findUserById(payload.id);
-            if(!user){
+            if(!user || !user.isActive){
                 throw new UnauthorizedException()
             }
             payload = {

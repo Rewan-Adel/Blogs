@@ -27,7 +27,7 @@ async function bootstrap() {
 
   //Response and Exception Handling
   app.useGlobalInterceptors(new ResponseInterceptor());
-  // app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   //Fake Data Seeding
   // const seedsService = app.get(SeedsService);
