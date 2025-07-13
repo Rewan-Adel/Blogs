@@ -23,6 +23,7 @@ export class AuthGuard implements CanActivate{
         const request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
         if (!token) {
+            console.log('No token provided');
             throw new UnauthorizedException()
         }
 
@@ -34,6 +35,7 @@ export class AuthGuard implements CanActivate{
 
             const user = await this.userService.findUserById(payload.id);
             if(!user || !user.isActive){
+                console.log('User not found or inactive');
                 throw new UnauthorizedException()
             }
             payload = {

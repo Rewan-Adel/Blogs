@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Patch, Post, SetMetadata } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, ParseIntPipe, Patch, Post, SetMetadata } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDTO } from './dtos/create-user-dto';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
@@ -30,7 +30,11 @@ export class UsersController {
             errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE
         })
     ) id: number){
-        return await this.usersService.findUserById(id)
+        const user = await this.usersService.findUserById(id);
+        if (!user) {
+            throw new NotFoundException(`User with id ${id} not found`);
+        }
+        return user;
     }
 
     @Delete(':id')

@@ -26,8 +26,8 @@ export class UsersService {
         return  await this.userRepository.findOneBy({ email });;
     };
 
-    async findUserById(id: number) {
-        return await this.userRepository.findOneBy({ id });
+    async findUserById(userId: number) {
+        return await this.userRepository.findOneBy({ id: userId });
     };
 
     async findAllUsers() {
