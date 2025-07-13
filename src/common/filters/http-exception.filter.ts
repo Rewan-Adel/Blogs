@@ -8,7 +8,6 @@ export class HttpExceptionFilter {
 
         response.status(status).json({
             status: 'failed',
-            statusCode: status,
             message: exception.message || 'Internal server error',
             error: exception.response?.error || 'Internal Server Error',
         });
