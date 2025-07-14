@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { IS_PUBLIC } from "src/common/decorators/public.decorator";
@@ -23,7 +23,6 @@ export class AuthGuard implements CanActivate{
         const request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
         if (!token) {
-            console.log('No token provided');
             throw new UnauthorizedException()
         }
 
@@ -35,8 +34,7 @@ export class AuthGuard implements CanActivate{
 
             const user = await this.userService.findUserById(payload.id);
             if(!user || !user.isActive){
-                console.log('User not found or inactive');
-                throw new UnauthorizedException()
+                throw new UnauthorizedException("Inactive Account")
             }
             payload = {
                 id : user.id,
@@ -45,7 +43,7 @@ export class AuthGuard implements CanActivate{
             }
             request['user'] = payload;
         }catch (error) {
-            throw new UnauthorizedException()
+            throw new UnauthorizedException(error.message || 'Unauthorized');
         }
 
         return true;
