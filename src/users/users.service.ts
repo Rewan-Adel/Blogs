@@ -51,4 +51,19 @@ export class UsersService {
         return await this.userRepository.remove(user);
     };
 
+    async uploadProfilePicture(userId: number, file: Express.Multer.File) {
+        if (!file) {
+            throw new BadRequestException('File must be provided');
+        }
+
+        const user = await this.findUserById(userId);
+        if (!user) {
+            throw new BadRequestException(`User with id ${userId} not found`);
+        }
+        user.image = file.buffer.toString('base64');
+        if (!user.image) {
+            throw new Error('Image upload failed');
+        }
+        return await this.userRepository.save(user);
+    }
 }

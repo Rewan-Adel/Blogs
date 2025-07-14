@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, ParseIntPipe, Patch, Post, SetMetadata } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, ParseIntPipe, Patch, Post, SetMetadata, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDTO } from './dtos/create-user-dto';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
@@ -6,6 +6,7 @@ import { UpdateUserDTO } from './dtos/update-user-dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { UserRole } from './enums/user-roles-enum';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 
 @ApiTags('Users')
@@ -69,5 +70,15 @@ export class UsersController {
     @Get('/get/profile')
     async getProfile(@CurrentUser() user: any) {
         return this.usersService.findUserById(user.id);
+    }
+
+    @Post('upload/profile-picture')
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadProfilePicture(
+        @CurrentUser() user: any,
+        @UploadedFile() file: Express.Multer.File
+    ) {
+        console.log('File uploaded successfully:', file.buffer ? file.buffer.toString('base64') : 'No file buffer');
+        return this.usersService.uploadProfilePicture(user.id, file);
     }
 }
