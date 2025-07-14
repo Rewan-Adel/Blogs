@@ -29,7 +29,11 @@ export const seedData = async (manager: EntityManager): Promise<void> => {
             article.content = faker.lorem.paragraphs(3);
             article.isPublished = faker.datatype.boolean();
 
-            const user = await manager.findOne(User, { where: { id: faker.number.int({ min: 1, max: 500 }) } });
+            // Get all user IDs from the database
+            const userIds = (await manager.find(User, { select: ["id"] })).map(u => u.id);
+            // Pick a random user ID from the available IDs
+            const randomUserId = userIds[Math.floor(Math.random() * userIds.length)];
+            const user = await manager.findOne(User, { where: { id: randomUserId } });
             if (!user) {
                 console.error('User not found');
                 continue;
