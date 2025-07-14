@@ -1,23 +1,32 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from "@nestjs/common";
-import { error } from "console";
 import { Response } from 'express';
+import { stat } from "fs";
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter{
     catch(exception: HttpException, host: ArgumentsHost) {
-        const response = host.switchToHttp().getResponse<Response>();
-        const status   = exception.getStatus() ? exception.getStatus() : 500;
-        const exceptionResponse = exception.getResponse();
-        const message =
-        typeof exceptionResponse === 'string'
-        ? exceptionResponse
-        : (exceptionResponse as any).message || exception.message;
+        const res = host.switchToHttp().getResponse<Response>();
+        const status = exception.getStatus();
 
-     console.error('Exception caught:', exceptionResponse); 
-        response.status(status).json({
-            status: 'failed',
-            message: exception.message || 'Internal server error!',
-            error :  exceptionResponse
+        const response = exception.getResponse();
+
+        let message: string;
+
+        if (typeof response === 'object' && response !== null) {
+          const resObj: any = response;
+          if (Array.isArray(resObj.message)) {
+            message = resObj.message.join(', ');
+          } else {
+            message = resObj.message || 'Internal server error!';
+          }
+        } else {
+          message = response || 'Internal server error!';
+        }
+    
+        res.status(status).json({
+          status: 'failed',
+          message,
+          data: null
         });
-    }
+}
 }
