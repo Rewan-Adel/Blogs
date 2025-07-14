@@ -1,5 +1,6 @@
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Comment } from "src/comments/entities/comment.entity";
 
 @Entity('articles')
 export class Article{
@@ -27,4 +28,10 @@ export class Article{
         cascade: true,
     })
     author: User;
+
+    @OneToMany(() => Comment, comment => comment.article,{
+        onDelete: 'CASCADE', // If the article is deleted, its comments will also be deleted
+        cascade: true,
+    })
+    comments: Comment[];
 }

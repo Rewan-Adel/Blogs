@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { SeedsModule } from './seeds/seeds.module';
 import { SeedsService } from './seeds/seeds.service';
 import { ArticlesModule } from './articles/articles.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { ArticlesModule } from './articles/articles.module';
     isGlobal: true,
     envFilePath: `.development.env`,
   }),
-    DatabasesModule, UsersModule, AuthModule, SeedsModule, ArticlesModule],
+    DatabasesModule, UsersModule, AuthModule, SeedsModule, ArticlesModule, CommentsModule],
   controllers: [AppController],
   providers: [AppService, SeedsService],
 })

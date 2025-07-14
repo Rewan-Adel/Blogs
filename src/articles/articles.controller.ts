@@ -5,6 +5,7 @@ import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { UserRole } from 'src/users/enums/user-roles-enum';
 import { Public } from 'src/common/decorators/public.decorator';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('articles')
 export class ArticlesController {
@@ -23,6 +24,9 @@ export class ArticlesController {
     // Get all articles for admins
     @Get('admin')
     @Roles([UserRole.ADMIN])
+
+    @ApiOperation({ summary: 'Get all articles' })
+    @ApiResponse({ status: 200, description: 'Return all articles.' })
     async findAllArticles() {
         return this.articlesService.findAllArticles();
     }

@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { UserRole } from "../enums/user-roles-enum";
 import { Article } from "src/articles/entities/article.entity";
-
+import { Comment } from "src/comments/entities/comment.entity";
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
@@ -33,5 +33,8 @@ export class User {
 
   @OneToMany(() => Article, article => article.author)
   articles: Article[];
+
+  @OneToMany(() => Comment, comment => comment.user)
+  comments: Comment[];
 }
 

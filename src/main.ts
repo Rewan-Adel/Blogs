@@ -7,8 +7,10 @@ import compression from 'compression';
 import * as morgan from 'morgan';
 import helmet from 'helmet';
 
+
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { SwaggerBuilding } from './common/swagger';
 
 import { SeedsService } from './seeds/seeds.service';
 
@@ -33,6 +35,7 @@ async function bootstrap() {
   // const seedsService = app.get(SeedsService);
   // seedsService.seedDatabase();
 
+  SwaggerBuilding(app);
   await app.listen(configService.get<number>("PORT") ?? 3000);
   console.log(`Server is running in ${configService.get('NODE_ENV')} mode`);
 }

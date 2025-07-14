@@ -11,7 +11,7 @@ export class ResponseInterceptor implements NestInterceptor {
             map(data => {
                 context.switchToHttp().getResponse().status(200).json({
                     status: 'success',
-                    message: 'Request successful',
+                    message: 'Request was successful',
                     data: data,
                 });
             }),

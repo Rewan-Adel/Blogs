@@ -5,13 +5,19 @@ import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { UpdateUserDTO } from './dtos/update-user-dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { UserRole } from './enums/user-roles-enum';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Post()
     @Roles([UserRole.ADMIN])
+    @ApiOperation({ summary: 'Create a new user by admin' })
+    
+
     async createUser(
         @Body() createUserDto: CreateUserDTO) {
         return this.usersService.createUser(createUserDto);
