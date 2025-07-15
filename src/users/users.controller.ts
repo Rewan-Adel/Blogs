@@ -78,7 +78,7 @@ export class UsersController {
         @CurrentUser() user: any,
         @UploadedFile() file: Express.Multer.File
     ) {
-        console.log('File uploaded successfully:', file.buffer ? file.buffer.toString('base64') : 'No file buffer');
+        // console.log('File uploaded successfully:', file.buffer ? file.buffer.toString('base64') : 'No file buffer');
         return this.usersService.uploadProfilePicture(user.id, file);
     }
 }
